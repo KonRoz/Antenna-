@@ -1,0 +1,5 @@
+root = Tk() is creating an instance of the class tk.Tkinter --> by convention this instance is named root --> this is derived from the fact that root is the highest-lvel GUI component in any Tkinter application
+root.mainloop () loops the window over and waiting for an event to occur
+Containers vs Widgets --> Containers contain widgets
+By default containers are stretchy
+myContainer1 = tk.Frame(root) --> creates a container with a parent root
