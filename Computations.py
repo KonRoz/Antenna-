@@ -1,5 +1,4 @@
 import math as math
-import tkinter as tk
 
 #This class uses the assumptions that the orbit passes directly above the ground station,
 #is spherical, and the ground station is a fixed station and has a downlink and uplink
@@ -10,8 +9,11 @@ import tkinter as tk
 class Computations:
     height = 0
 
-    def __init__(self, height):
-        self.height = height
+    def __init__(self, height=None):
+        if height is None:
+            self.height = None
+        else:
+            self.height = height
 
     #Orbital velocity of the satellite equation can be found at https://keisan.casio.com/exec/system/1224665242
     def velocity(self):
@@ -27,11 +29,11 @@ class Computations:
 
     #Angle from the center of the eart to the two ends of the chord
     def theta(self):
-        return 2*math.asin(self.chord()/(2*(h+6378.14)))
+        return 2*math.asin(self.chord()/(2*(self.height+6378.14)))
 
     #Portion of the circumference of the orbit that the satellite is in contact for in kilometers.
     def s(self):
-        return (h+6378.14)*self.theta()
+        return (self.height+6378.14)*self.theta()
 
     #Using previous functions to find the time of contact
     def getTimeOfContact(self):
@@ -40,10 +42,10 @@ class Computations:
     #This will be the space loss in dB for signal, 0.29979 is the wavelength of a 1 gigahertz signal
     #The calculation will be 1.76(A decent gain for a directive antennahttp://www.antenna-theory.com/basics/gain.php) = Reciever gain + antenna gain - spaceloss
     def spaceLoss(self):
-        return ((0.299792458)*(0.299792458))/(4*math.pi()*self.s())
+        return ((0.299792458)*(0.299792458))/(4*math.pi*self.s())
 
     def receiverGain(self):
-        return ((math.pi()*math.pi())(400000*400000)*.95)/((0.299792458)*(0.299792458))
+        return ((math.pi*math.pi)*(400000*400000)*.95)/((0.299792458)*(0.299792458))
 
     def getDiameter(self):
-        return (21*math.sqrt(self.spaceloss()+1.76-self.receiverGain()))^(-1)/1000000000
+        return (21*math.sqrt(self.spaceLoss()+1.76-self.receiverGain()))**(-1)/1000000000
