@@ -1,51 +1,75 @@
 import math as math
 
-#This class uses the assumptions that the orbit passes directly above the ground station,
-#is spherical, and the ground station is a fixed station and has a downlink and uplink
-#frequency of 1 GHz
-#The antennas will need to be a high gain directional antenna
-#The antenna will operate at the ideal, which is possible for 1/2 wavelength dipole antennas 100% efficiency
-#Given that the operating frequency is 1 GHz the recommended data rate is 400KB/s
 class Computations:
-    height = 0
+    def __init__(self, altitude, frequency, dataRate, power):
+#       self.frequency = frequency #Carrier frequency in hz
+#       self.altitude = altitude #Altitude in meters
+#        self.dataRate = dataRate #data rate in bits/s
+#        self.power = power #power of the ground station transmitter
 
-    def __init__(self, height=None):
-        if height is None:
-            self.height = None
-        else:
-            self.height = height
+#        Test Values
+        self.frequency = 100000000#Carrier frequency in hz
+        self.altitude = 50000#Altitude in meters
+        self.dataRate = 10000#data rate in bits/s
+        self.power = 1000#power of the ground station transmitter
 
-    #Orbital velocity of the satellite equation can be found at https://keisan.casio.com/exec/system/1224665242
-    def velocity(self):
-        return math.sqrt(398600.5/(6378.14 + self.height))
+        #constants
+        self.speedOfLight = 3*10**8
+        self.rainAttenuation = 6
+        self.efficiency = .6
+        self.shannonsLimit = -1.6
+        self.frequencyGHz = self.frequency/(10**9)
+        self.powerDb = 10 * math.log(self.power)
+        self.earthRadius = 6371000
 
-    #Orbital period of the satellite equation can be found at https://keisan.casio.com/exec/system/1224665242
-    def period(self):
-        return ((2*math.pi())*((6378.14 + self.height)/(self.velocity())))
+        #GeoStationary Orbit Gain equations
+        self.wavelength = self.speedOfLight / self.frequency
 
-    #chord of the satellites circumference of contact with the ground station
-    def chord(self):
-        return math.sqrt(2*self.height*self.height*(1-math.cos(math.radians(170))))
+        #antennaGain = 27000/beamwidth^2
+        #beamwidth = 21/(frequency * dishDiameter)
+        #Ideal equation shannonsLimit = reciverGain + antennaGain + powerDb - spaceloss - rainAttenuation
+        #solving for dish dishDiameter
 
-    #Angle from the center of the eart to the two ends of the chord
-    def theta(self):
-        return 2*math.asin(self.chord()/(2*(self.height+6378.14)))
+        #Latency Calculation
+        def calcLatency(self):
+            latency = self.altitude/(self.speedOfLight)
+            return self.latency
 
-    #Portion of the circumference of the orbit that the satellite is in contact for in kilometers.
-    def s(self):
-        return (self.height+6378.14)*self.theta()
+        def calcAntennaLength(self):
+            antennaLength = self.wavelength / 2
+            return antennaLength
 
-    #Using previous functions to find the time of contact
-    def getTimeOfContact(self):
-        return self.s()/self.velocity()
 
-    #This will be the space loss in dB for signal, 0.29979 is the wavelength of a 1 gigahertz signal
-    #The calculation will be 1.76(A decent gain for a directive antennahttp://www.antenna-theory.com/basics/gain.php) = Reciever gain + antenna gain - spaceloss
-    def spaceLoss(self):
-        return ((0.299792458)*(0.299792458))/(4*math.pi*self.s())
+        def calcGeoStationaryDishDiameter(self):
+            spaceLoss = 147.55 - 20*math.log(self.altitude) - 20*math.log(self.frequencyGhz)
+            recieverGain = (math.pi()**2*self.dataRate**2*self.efficiency)/self.wavelength
+            tempVal = self.shannonsLimit - reciverGain - self.powerDb + spaceLoss + self.rainAttenuation
+            #21/(frequency * dishDiameter) = e^(tempVal/10)
+            self.geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+            return self.geoStationaryDishDiameter
 
-    def receiverGain(self):
-        return ((math.pi*math.pi)*(400000*400000)*.95)/((0.299792458)*(0.299792458))
+        #Asynchronous orbit calculations
+        #averaging the values of the altitude across half a pass in order to determine space loss
+        def calcDishDiameter(self):
+            altitudeSamples = []
+            for i in range(84):
+                altitudeSamples.append(self.altitudeSample(self, i + 5))
+            altitudeSamples.append(altitude)
+            for i in range(85):
+                averageAltitude = altitudeSamples[i] + sample
+            averageAltitude = averageAltitude/85
 
-    def getDiameter(self):
-        return (21*math.sqrt(self.spaceLoss()+1.76-self.receiverGain()))**(-1)/1000000000
+            spaceLoss = 147.55 - 20*math.log(averageAltitude) - 20*math.log(self.frequencyGhz)
+            recieverGain =(math.pi()**2)*((self.dataRate**2).efficiency)/self.wavelength
+            tempVal = self.shannonsLimit - reciverGain - self.powerDb + spaceLoss + self.rainAttenuation
+            #21/(frequency * dishDiameter) = e^(tempVal/10)
+            self.geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+            return self.geoStationaryDishDiameter
+
+
+        #Solving an angle side side triangle using law of sines
+        def altitudeSample(self, theta):
+            angle2 = math.asin((math.sin(math.degrees(theta+5+90)))/(self.earthRadius+self.altitude)*self.earthRadius)
+            angle3 = 180 - (theta + 90 + 5) - angle2
+            sample = sin(angle3)*(self.earthRadius+self.altitude)/sin(theta + 90 + 5)
+            return sample
