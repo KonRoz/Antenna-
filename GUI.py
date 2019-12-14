@@ -178,6 +178,7 @@ class OutputWindow:
         self.app = OutputWindow(self.newWindow, self.myAltitude, self.DishDiameter)
 
     def calculateStuff(self):
+        self.myComputer = Computations()
         self.myComputer.height = float(self.myAltitude)
         self.DishDiameter = float(self.myComputer.getDiameter())
 
