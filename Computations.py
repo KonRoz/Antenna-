@@ -16,7 +16,7 @@ class Computations:
         self.powerDb = 10 * math.log(self.power)
         self.earthRadius = 6371000
 
-        #GeoStationary Orbit Gain equations
+    #GeoStationary Orbit Gain equations
         self.wavelength = self.speedOfLight / self.frequency
 
         #antennaGain = 27000/beamwidth^2
@@ -25,41 +25,41 @@ class Computations:
         #solving for dish dishDiameter
 
         #Latency Calculation
-        def calcLatency(self):
-            latency = self.altitude/(self.speedOfLight)
-            return self.latency
+    def calcLatency(self):
+        latency = self.altitude/(self.speedOfLight)
+        return latency
 
-        def calcAntennaLength(self):
-            antennaLength = self.wavelength / 2
-            return antennaLength
+    def calcAntennaLength(self):
+        antennaLength = self.wavelength / 2
+        return antennaLength
 
 
-        def calcGeoStationaryDishDiameter(self):
-            spaceLoss = 147.55 - 20*math.log(self.altitude) - 20*math.log(self.frequencyGhz)
-            recieverGain = (math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength
-            tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
-            #21/(frequency * dishDiameter) = e^(tempVal/10)
-            geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
-            return geoStationaryDishDiameter
+    def calcGeoStationaryDishDiameter(self):
+        spaceLoss = 147.55 - 20*math.log(self.altitude) - 20*math.log(self.frequencyGhz)
+        recieverGain = (math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength
+        tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
+        #21/(frequency * dishDiameter) = e^(tempVal/10)
+        geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+        return geoStationaryDishDiameter
 
-        #Asynchronous orbit calculations
-        #averaging the values of the altitude across half a pass in order to determine space loss
-        def calcDishDiameter(self):
-            altitudeSamples = []
-            for i in range(84):
-                altitudeSamples.append(self.altitudeSample(self, i + 5))
-            altitudeSamples.append(altitude)
-            averageAltitude = 0
-            for i in range(85):
-                averageAltitude = altitudeSamples[i] + averageAltitude
-            averageAltitude = averageAltitude/85
+    #Asynchronous orbit calculations
+    #averaging the values of the altitude across half a pass in order to determine space loss
+    def calcDishDiameter(self):
+        altitudeSamples = []
+        for i in range(84):
+            altitudeSamples.append(self.altitudeSample(self, i + 5))
+        altitudeSamples.append(altitude)
+        averageAltitude = 0
+        for i in range(85):
+            averageAltitude = altitudeSamples[i] + averageAltitude
+        averageAltitude = averageAltitude/85
 
-            spaceLoss = 147.55 - 20*math.log(averageAltitude) - 20*math.log(self.frequencyGhz)
-            recieverGain =(math.pi**2)*((self.dataRate**2).efficiency)/self.wavelength
-            tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
-            #21/(frequency * dishDiameter) = e^(tempVal/10)
-            DishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
-            return DishDiameter
+        spaceLoss = 147.55 - 20*math.log(averageAltitude) - 20*math.log(self.frequencyGhz)
+        recieverGain =(math.pi**2)*((self.dataRate**2).efficiency)/self.wavelength
+        tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
+        #21/(frequency * dishDiameter) = e^(tempVal/10)
+        DishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+        return DishDiameter
 
 
         #Solving an angle side side triangle using law of sines
