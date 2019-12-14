@@ -39,8 +39,8 @@ class Computations:
             recieverGain = (math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength
             tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
             #21/(frequency * dishDiameter) = e^(tempVal/10)
-            self.geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
-            return self.geoStationaryDishDiameter
+            geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+            return geoStationaryDishDiameter
 
         #Asynchronous orbit calculations
         #averaging the values of the altitude across half a pass in order to determine space loss
@@ -58,8 +58,8 @@ class Computations:
             recieverGain =(math.pi**2)*((self.dataRate**2).efficiency)/self.wavelength
             tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
             #21/(frequency * dishDiameter) = e^(tempVal/10)
-            self.geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
-            return self.geoStationaryDishDiameter
+            DishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+            return DishDiameter
 
 
         #Solving an angle side side triangle using law of sines
