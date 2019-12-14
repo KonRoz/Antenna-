@@ -55,7 +55,7 @@ class Computations:
 
             spaceLoss = 147.55 - 20*math.log(averageAltitude) - 20*math.log(self.frequencyGhz)
             recieverGain =(math.pi()**2)*((self.dataRate**2).efficiency)/self.wavelength
-            tempVal = self.shannonsLimit - reciverGain - self.powerDb + spaceLoss + self.rainAttenuation
+            tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
             #21/(frequency * dishDiameter) = e^(tempVal/10)
             self.geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
             return self.geoStationaryDishDiameter
@@ -65,5 +65,5 @@ class Computations:
         def altitudeSample(self, theta):
             angle2 = math.asin((math.sin(math.degrees(theta+5+90)))/(self.earthRadius+self.altitude)*self.earthRadius)
             angle3 = 180 - (theta + 90 + 5) - angle2
-            sample = sin(angle3)*(self.earthRadius+self.altitude)/sin(theta + 90 + 5)
+            sample = math.sin(angle3)*(self.earthRadius+self.altitude)/math.sin(theta + 90 + 5)
             return sample
