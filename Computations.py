@@ -49,6 +49,7 @@ class Computations:
             for i in range(84):
                 altitudeSamples.append(self.altitudeSample(self, i + 5))
             altitudeSamples.append(altitude)
+            averageAltitude = 0
             for i in range(85):
                 averageAltitude = altitudeSamples[i] + averageAltitude
             averageAltitude = averageAltitude/85
