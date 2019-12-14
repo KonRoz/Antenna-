@@ -37,7 +37,7 @@ class Computations:
         def calcGeoStationaryDishDiameter(self):
             spaceLoss = 147.55 - 20*math.log(self.altitude) - 20*math.log(self.frequencyGhz)
             recieverGain = (math.pi()**2*self.dataRate**2*self.efficiency)/self.wavelength
-            tempVal = self.shannonsLimit - reciverGain - self.powerDb + spaceLoss + self.rainAttenuation
+            tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
             #21/(frequency * dishDiameter) = e^(tempVal/10)
             self.geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
             return self.geoStationaryDishDiameter
@@ -50,7 +50,7 @@ class Computations:
                 altitudeSamples.append(self.altitudeSample(self, i + 5))
             altitudeSamples.append(altitude)
             for i in range(85):
-                averageAltitude = altitudeSamples[i] + sample
+                averageAltitude = altitudeSamples[i] + averageAltitude
             averageAltitude = averageAltitude/85
 
             spaceLoss = 147.55 - 20*math.log(averageAltitude) - 20*math.log(self.frequencyGhz)
