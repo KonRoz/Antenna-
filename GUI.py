@@ -119,64 +119,16 @@ class InputWindow:
 
     def getAltitude(self):
         self.altitude_value = self.altitude_box.get()
-        self.CesiumWindow()
+        self.OutputWindow()
 
-    def CesiumWindow(self):
+    def OutputWindow(self):
 
         self.newWindow = tk.Toplevel(self.master)
-        self.app = CesiumWindow(self.newWindow, self.altitude_value)
+        self.app = OutputWindow(self.newWindow, self.altitude_value)
 
     def ReturntoHome(self):
 
         self.master.destroy()
-
-
-class CesiumWindow:
-
-    def __init__(self, master, myAltitude):
-        self.myAltitude = myAltitude
-        self.DishDiameter = 0
-        self.myComputer = Computer.Computations()
-
-        self.bg_image = tk.PhotoImage(file=image_name)
-        self.width = self.bg_image.width()
-        self.height = self.bg_image.height()
-
-        self.master = master
-        self.master.title('CESIUM ION WINDOW')
-        self.master.geometry("%dx%d" % (self.width, self.height))
-
-        self.frame = tk.Frame(self.master)
-
-        self.cv = tk.Canvas(self.frame, width=self.width, height=self.height)
-        self.cv.create_image(0, 0, image=self.bg_image, anchor="nw")
-
-        self.welcome_label = tk.Label(self.cv, anchor='center', text="Cesium Ion 3D Display",
-                                      font=FONT_TITLE)
-        self.input_button = tk.Button(self.cv, anchor='center', text='Display Output', width=25,
-                                      command=self.outputWindow, font=FONT_BUTTONS)
-
-        self.welcome_label.grid(column=1, row=0, sticky='NS', padx=5, pady=5)
-        self.input_button.grid(column=0, row=1, sticky='NS', padx=10, pady=10)
-        self.frame.pack(fill=BOTH, expand=YES)
-
-        self.frame.grid_columnconfigure(0, weight=1)
-        self.frame.grid_columnconfigure(1, weight=1)
-        self.frame.grid_columnconfigure(2, weight=1)
-        self.frame.grid_rowconfigure(0, weight=1)
-        self.frame.grid_rowconfigure(1, weight=1)
-
-        self.cv.pack(fill=BOTH, expand=YES)
-
-
-    def outputWindow(self):
-        self.calculateStuff()
-        self.newWindow = tk.Toplevel(self.master)
-        self.app = OutputWindow(self.newWindow, self.myAltitude, self.DishDiameter)
-
-    def calculateStuff(self):
-        self.myComputer.height = float(self.myAltitude)
-        self.DishDiameter = float(self.myComputer.getDiameter())
 
 
 class OutputWindow:
@@ -219,6 +171,15 @@ class OutputWindow:
         self.frame.grid_rowconfigure(1, weight=1)
 
         self.cv.pack(fill=BOTH, expand=YES)
+
+    def outputWindow(self):
+        self.calculateStuff()
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = OutputWindow(self.newWindow, self.myAltitude, self.DishDiameter)
+
+    def calculateStuff(self):
+        self.myComputer.height = float(self.myAltitude)
+        self.DishDiameter = float(self.myComputer.getDiameter())
 
     def quit(self):
         self.master.destroy()
