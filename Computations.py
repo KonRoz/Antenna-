@@ -4,8 +4,8 @@ class Computations:
     def __init__(self, altitude, frequency, dataRate, power):
        self.frequency = frequency #Carrier frequency in hz
        self.altitude = altitude #Altitude in meters
-        self.dataRate = dataRate #data rate in bits/s
-        self.power = power #power of the ground station transmitter
+       self.dataRate = dataRate #data rate in bits/s
+       self.power = power #power of the ground station transmitter
 
 #        Test Values
 #        self.frequency = 100000000#Carrier frequency in hz
