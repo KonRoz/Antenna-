@@ -2,16 +2,16 @@ import math as math
 
 class Computations:
     def __init__(self, altitude, frequency, dataRate, power):
-#       self.frequency = frequency #Carrier frequency in hz
-#       self.altitude = altitude #Altitude in meters
-#        self.dataRate = dataRate #data rate in bits/s
-#        self.power = power #power of the ground station transmitter
+       self.frequency = frequency #Carrier frequency in hz
+       self.altitude = altitude #Altitude in meters
+        self.dataRate = dataRate #data rate in bits/s
+        self.power = power #power of the ground station transmitter
 
 #        Test Values
-        self.frequency = 100000000#Carrier frequency in hz
-        self.altitude = 50000#Altitude in meters
-        self.dataRate = 10000#data rate in bits/s
-        self.power = 1000#power of the ground station transmitter
+#        self.frequency = 100000000#Carrier frequency in hz
+#        self.altitude = 50000#Altitude in meters
+#        self.dataRate = 10000#data rate in bits/s
+#        self.power = 1000#power of the ground station transmitter
 
         #constants
         self.speedOfLight = 3*10**8
