@@ -48,14 +48,14 @@ class Computations:
         altitudeSamples = []
         for i in range(84):
             altitudeSamples.append(self.altitudeSample(i + 5))
-        altitudeSamples.append(self.altitude)
         averageAltitude = 0
-        for i in range(85):
+        for i in range(84):
             averageAltitude = altitudeSamples[i] + averageAltitude
-        averageAltitude = averageAltitude/85
+        averageAltitude = averageAltitude * 2 + self.altitude
+        averageAltitude = averageAltitude/170
 
         spaceLoss = 147.55 - 20*math.log(averageAltitude) - 20*math.log(self.frequencyGHz)
-        recieverGain =10*math.log((math.pi**2)*((self.dataRate**2)*self.efficiency)/self.wavelength)
+        recieverGain =10*math.log((math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength)
         tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
         #21/(frequency * dishDiameter) = e^(tempVal/10)
         DishDiameter = (1/(math.exp(tempVal/10)))*(21/self.frequencyGHz)
@@ -64,7 +64,7 @@ class Computations:
 
         #Solving an angle side side triangle using law of sines
     def altitudeSample(self, theta):
-        angle2 = math.asin((math.sin(math.degrees(theta+5+90)))/(self.earthRadius+self.altitude)*self.earthRadius)
-        angle3 = 180 - (theta + 90 + 5) - angle2
-        sample = math.sin(angle3)*(self.earthRadius+self.altitude)/math.sin(theta + 90 + 5)
+        angle2 = math.degrees(math.asin((math.sin(math.radians(theta+90)))/(self.earthRadius+self.altitude)*self.earthRadius))
+        angle3 = 180 - (theta + 90) - angle2
+        sample = math.sin(math.radians(angle3))*(self.earthRadius+self.altitude)/math.sin(math.radians(theta + 90))
         return sample
