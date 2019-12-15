@@ -47,7 +47,7 @@ class Computations:
     def calcDishDiameter(self):
         altitudeSamples = []
         for i in range(84):
-            altitudeSamples.append(self.altitudeSample(self, i + 5))
+            altitudeSamples.append(self.altitudeSample(i + 5))
         altitudeSamples.append(self.altitude)
         averageAltitude = 0
         for i in range(85):
