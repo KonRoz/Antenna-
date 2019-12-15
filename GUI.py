@@ -165,7 +165,9 @@ class InputWindow:
                                  "Ku-Band": (6.0, 18),
                                  "Ka-Band": (40.0, 40)
                                 }
+
         print(self.band.get())
+
         if self.band.get() == 'L-Band':
             myDataRate = DataRateandFreqLookUp["L-Band"][0] * (10**9)
             myFrequency = DataRateandFreqLookUp["L-Band"][1] * (10**6)
@@ -184,7 +186,7 @@ class InputWindow:
         print(myDataRate)
         print(myFrequency)
 
-        self.myComputer = Computations.Computations(int(self.altitude_box.get()), myFrequency, myDataRate, int(self.transmission_box.get()))
+        self.myComputer = Computations.Computations(float(self.altitude_box.get()), myFrequency, myDataRate, float(self.transmission_box.get()))
 
         self.latency = self.myComputer.calcLatency()
         self.antenna_length = self.myComputer.calcAntennaLength()
@@ -203,7 +205,7 @@ class InputWindow:
     def OutputWindow(self):
 
         self.newWindow = tk.Toplevel(self.master)
-        self.app = OutputWindow(self.newWindow, self.dish_diameter, self.latency, self.antenna_length, int(self.altitude_box.get()))
+        self.app = OutputWindow(self.newWindow, self.dish_diameter, self.latency, self.antenna_length, float(self.altitude_box.get()))
 
     def ReturntoHome(self):
 
@@ -252,6 +254,9 @@ class OutputWindow:
         self.antenna_length_output = tk.Label(self.cv, anchor='center', text="%s meters" % self.antenna_length,
                                            font=FONT_BUTTONS)
 
+        self.quit_button = tk.Button(self.cv, anchor='center', text='Return to Inputs', width=25, command=self.quit,
+                                     font=FONT_BUTTONS)
+
         self.welcome_label.grid(column=2, row=0, sticky='NS', padx=5, pady=50)
 
         self.dish_diameter_label.grid(column=1, row=1, sticky='NS', padx=20, pady=20)
@@ -262,6 +267,8 @@ class OutputWindow:
 
         self.antenna_length_label.grid(column=1, row=3, sticky='NS', padx=20, pady=20)
         self.antenna_length_output.grid(column=3, row=3, sticky='NS', padx=20, pady=20)
+
+        self.quit_button.grid(column=2, row=4, sticky='NS', padx=20, pady=50)
 
         self.frame.pack(fill=BOTH, expand=YES)
 
