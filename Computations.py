@@ -39,7 +39,7 @@ class Computations:
         recieverGain = 10*math.log((math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength)
         tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
         #21/(frequency * dishDiameter) = e^(tempVal/10)
-        geoStationaryDishDiameter = (1/(math.exp(tempVal/10)))*(21/self.frequencyGHz)
+        geoStationaryDishDiameter = (1/(tempVal/10))*(21/self.frequencyGHz)#removed exponent
         return geoStationaryDishDiameter
 
     #Asynchronous orbit calculations
@@ -58,7 +58,7 @@ class Computations:
         recieverGain =10*math.log((math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength)
         tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
         #21/(frequency * dishDiameter) = e^(tempVal/10)
-        DishDiameter = (1/(math.exp(tempVal/10)))*(21/self.frequencyGHz)
+        DishDiameter = (1/(tempVal/10))*(21/self.frequencyGHz)#removed exponent
         return DishDiameter
 
 
