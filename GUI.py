@@ -1,41 +1,69 @@
+# File: GUI.py
+# Author: Konrad Rozanski
+# Email: krozansk@nd.edu
+#
+# This file contains the classes that comprise the GUI (graphical user interface) of the
+# Antenna Selector application
+
+# tkinter is a third party library for GUI programming in python
 import tkinter as tk
-from tkinter.constants import BOTH,YES
+from tkinter.constants import BOTH, YES
+# the class used to compute the outputs for the inputted antenna specs
 import Computations
 
+# tuples containing the fonts and sizes for buttons and titles
 FONT_TITLE = ("Bebas Neue", 30)
 FONT_BUTTONS = ("Bebas Neue", 20)
 
+# the background image for the application windows
 image_name = "Earth.gif"
 
 
+# the welcome window for the program
 class WelcomeWindow:
 
+    # the constructor for the GUI --> master is the frame that WelcomeWindow resides within
     def __init__(self, master):
+
+        # initializing instance variables
+        # creating a tkinter variable to store the background image specified above
         self.bg_image = tk.PhotoImage(file=image_name)
+        # configuring image height and width --> this also serves as the height and width of the window
         self.width = self.bg_image.width()
         self.height = self.bg_image.height()
 
+        # master is the root window for Welcome Window
         self.master = master
         self.master.title('ANTENNA SELECTOR')
+
+        # specifying the height and width of the master window
         self.master.geometry("%dx%d" % (self.width, self.height))
 
+        # creating a frame within which the canvas (i.e. image background) will reside
         self.frame = tk.Frame(self.master)
 
+        # creating the canvas --> its a container that is capable of holding an image and passing it the bg image
         self.cv = tk.Canvas(self.frame, width=self.width, height=self.height)
         self.cv.create_image(0, 0, image=self.bg_image, anchor="nw")
 
+        # creating the widgets that reside within the Welcome Window
+        # Creating the header label
         self.welcome_label = tk.Label(self.cv, anchor='center', text="Welcome to the Notre Dame\n Antenna Selector",
                                       font=FONT_TITLE)
+        # creating the button that brings the user to the input window --> callback function: input_window
         self.input_button = tk.Button(self.cv, anchor='center', text='Select Antenna', width=25,
                                       command=self.input_window, font=FONT_BUTTONS)
+        # creating the button that allows the user to quit the application --> callback function: quit
         self.quit_button = tk.Button(self.cv, anchor='center', text='Exit', width=25, command=self.quit,
                                      font=FONT_BUTTONS)
 
+        # configuring the widgets that were declared above
         self.welcome_label.grid(column=1, row=0, sticky='NS', padx=5, pady=5)
         self.input_button.grid(column=0, row=1, sticky='NS', padx=10, pady=10)
         self.quit_button.grid(column=2, row=1, sticky='NS', padx=10, pady=10)
         self.frame.pack(fill=BOTH, expand=YES)
 
+        # giving each column and row the same weight so that the screen configuration remains the same upon expansion
         self.frame.grid_columnconfigure(0, weight=1)
         self.frame.grid_columnconfigure(1, weight=1)
         self.frame.grid_columnconfigure(2, weight=1)
@@ -44,30 +72,36 @@ class WelcomeWindow:
 
         self.cv.pack(fill=BOTH, expand=YES)
 
-
+    # callback functions for welcome window
+    # callback function for input button --> creates instance of InputWindow
     def input_window(self):
-
+        # tkinter does not like multiple toplevel ojects --> to create multiple top level we use tk.TopLevel
         self.newWindow = tk.Toplevel(self.master)
         self.app = InputWindow(self.newWindow)
 
+    # call back function for quit button
     def quit(self):
-
+        # destroys the instance of master into which the whole window is packed
         self.master.destroy()
 
 
+# the input window into which the user inputs the satellite specifications
 class InputWindow:
 
+    # constructor into which the tk.TopLevel object is passed
     def __init__(self, master):
 
-        #inputs
+        # tk variables for checkbox widget and frequency band drop down menu
+        # these need to be tk variables in order to access their values to use them in the calculations
         self.geostationary = tk.IntVar()
         self.band = tk.StringVar()
 
-        #Outputs
+        # the outputs that will be passed to the output window
         self.dish_diameter = None
         self.latency = None
         self.antenna_length = None
 
+        # this code is the same as in the welcome window --> it is used for the background image
         self.bg_image = tk.PhotoImage(file=image_name)
         self.width = self.bg_image.width()
         self.height = self.bg_image.height()
@@ -81,24 +115,30 @@ class InputWindow:
         self.cv = tk.Canvas(self.frame, width=self.width, height=self.height)
         self.cv.create_image(0, 0, image=self.bg_image, anchor="nw")
 
+        # the widgets that comprise the input window
+        # just a text label titling the window
         self.welcome_label = tk.Label(self.cv, anchor='center', text="Please Input the Satelite's Specifications",
                                       font=FONT_BUTTONS)
 
-        self.altitude = tk.Label(self.cv, anchor='center', text="Orbit Altitude",
+        # just a text label prefacing the altitude input
+        self.altitude = tk.Label(self.cv, anchor='center', text="Orbit Altitude (km)",
                                       font=FONT_BUTTONS)
-
+        # the input widget for the altitude
         self.altitude_box = tk.Entry(self.cv, font=FONT_BUTTONS)
-
-        self.altitude_ei = tk.Label(self.cv, anchor='center', text="e.g. 200000000 m",
+        # just a text label illustrating sample input
+        self.altitude_ei = tk.Label(self.cv, anchor='center', text="e.g. 2000",
                                  font=FONT_BUTTONS)
 
-        self.transmission = tk.Label(self.cv, anchor='center', text="Transmission Power",
+        # input line for transmission
+        # just a text label for transmission power
+        self.transmission = tk.Label(self.cv, anchor='center', text="Transmission Power (W)",
                                  font=FONT_BUTTONS)
-
+        # input widget for transmission power
         self.transmission_box = tk.Entry(self.cv, font=FONT_BUTTONS)
-
-        self.transmission_ei = tk.Label(self.cv, anchor='center', text="e.g. 200000000 Watts",
+        # just a text label illustrating transmission power sample
+        self.transmission_ei = tk.Label(self.cv, anchor='center', text="e.g. 1000",
                                     font=FONT_BUTTONS)
+
 
         self.geostationary_label = tk.Label(self.cv, text="Geostationary Orbit", font=FONT_BUTTONS)
         self.geostationary_box = tk.Checkbutton(self.cv, variable=self.geostationary, onvalue=1, offvalue=0)

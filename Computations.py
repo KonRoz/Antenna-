@@ -1,3 +1,10 @@
+# File: Computations.py
+# Author: Matthew Huebner
+# Email: mhuebner@nd.edu
+#
+# This file contains the Computations class which is instantiated within GUI.py to compute the
+# necessary outputs for the satellite specs that the user inputs
+
 import math as math
 
 class Computations:
