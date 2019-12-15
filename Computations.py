@@ -36,10 +36,10 @@ class Computations:
 
     def calcGeoStationaryDishDiameter(self):
         spaceLoss = 147.55 - 20*math.log(self.altitude) - 20*math.log(self.frequencyGHz)
-        recieverGain = (math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength
+        recieverGain = 10*math.log((math.pi**2*self.dataRate**2*self.efficiency)/self.wavelength)
         tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
         #21/(frequency * dishDiameter) = e^(tempVal/10)
-        geoStationaryDishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+        geoStationaryDishDiameter = (1/(math.exp(tempVal/10)))*(21/self.frequencyGHz)
         return geoStationaryDishDiameter
 
     #Asynchronous orbit calculations
@@ -55,10 +55,10 @@ class Computations:
         averageAltitude = averageAltitude/85
 
         spaceLoss = 147.55 - 20*math.log(averageAltitude) - 20*math.log(self.frequencyGHz)
-        recieverGain =(math.pi**2)*((self.dataRate**2).efficiency)/self.wavelength
+        recieverGain =10*math.log((math.pi**2)*((self.dataRate**2)*self.efficiency)/self.wavelength)
         tempVal = self.shannonsLimit - recieverGain - self.powerDb + spaceLoss + self.rainAttenuation
         #21/(frequency * dishDiameter) = e^(tempVal/10)
-        DishDiameter = ((math.exp(tempVal/10))**-1)*(21/self.frequencyGHz)
+        DishDiameter = (1/(math.exp(tempVal/10)))*(21/self.frequencyGHz)
         return DishDiameter
 
 
